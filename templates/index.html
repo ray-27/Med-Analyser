@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medical Document Analysis</title>
+    <link rel="stylesheet" href="/css">
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1>Medical Document Analysis Assistant</h1>
+            <div class="session-info">
+                <span id="session-status">No active session</span>
+                <button id="new-session-btn" class="btn btn-secondary">New Session</button>
+               
+                <button id="download-samples-btn" 
+                        class="btn btn-sample"
+                        onclick="window.open('/sample-files', '_blank')">
+                    📥 Sample Files
+                </button>
+
+
+
+                <a href="https://dv8tzhzvv961l.cloudfront.net/build/HowMED.pdf" target="_blank" >
+                <button id="how-to-use" class="btn btn-secondary">How to use</button>
+                </a>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Document Upload Section -->
+            <div id="upload-section" class="upload-section">
+                <div class="upload-area" id="upload-area">
+                    <div class="upload-icon">📄</div>
+                    <h3>Upload Medical Documents</h3>
+                    <p>Drag and drop files here or click to browse</p>
+                    <p class="file-types">Supported: PDF, PNG, JPG, JPEG, GIF, BMP (Max 16MB)</p>
+                    <input type="file" id="file-input" multiple accept=".pdf,.png,.jpg,.jpeg,.gif,.bmp" style="display: none;">
+                    <button id="browse-btn" class="btn btn-primary">Browse Files</button>
+                </div>
+
+                <div id="upload-progress" class="upload-progress" style="display: none;">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress-fill"></div>
+                    </div>
+                    <p id="progress-text">Processing documents...</p>
+                </div>
+                
+                <div id="file-list" class="file-list" style="display: none;">
+                    <h4>Selected Files:</h4>
+                    <ul id="selected-files"></ul>
+                    <button id="upload-btn" class="btn btn-primary">Upload & Process</button>
+                </div>
+                
+                
+            </div>
+
+            <!-- Chat Interface -->
+            <div id="chat-section" class="chat-section" style="display: none;">
+                <!-- Left side - Chat -->
+                <div class="chat-container">
+                    <div class="chat-header">
+                        <h3>Medical Assistant</h3>
+                        <span id="confidence-indicator" class="confidence-indicator"></span>
+                    </div>
+                    
+                    <div class="chat-messages" id="chat-messages">
+                        <div class="message bot-message">
+                            <div class="message-content">
+                                <p>Hello! I've processed your medical documents. You can now ask me questions about prescriptions, diagnoses, medications, and any other medical information from the uploaded files.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="chat-input-container">
+                        <input type="text" id="chat-input" placeholder="Ask about your medical documents..." />
+                        <button id="send-btn" class="btn btn-primary">Send</button>
+                    </div>
+                </div>
+
+                <!-- Right side - Document Sidebar -->
+                <div class="documents-sidebar">
+                    <div class="sidebar-header">
+                        <h3>Uploaded Documents</h3>
+                        <span id="doc-count" class="doc-count">0 documents</span>
+                    </div>
+                    
+                    <div class="documents-list" id="documents-list">
+                        <!-- Documents will be populated here -->
+                    </div>
+                    
+                    <div class="sidebar-footer">
+                        <button id="add-more-btn" class="btn btn-secondary">Add More Documents</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loading Overlay -->
+        <div id="loading-overlay" class="loading-overlay" style="display: none;">
+            <div class="loading-spinner"></div>
+            <p id="loading-text">Processing your request...</p>
+        </div>
+
+        <!-- Error Toast -->
+        <div id="error-toast" class="error-toast" style="display: none;">
+            <span id="error-message"></span>
+            <button id="close-error" class="close-btn">×</button>
+        </div>
+    </div>
+
+    <!-- Document Detail Modal -->
+
+
+    <script src="/js"></script>
+</body>
+</html>

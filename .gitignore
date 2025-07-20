@@ -1,0 +1,8 @@
+venv
+uploads
+medimg2.jpg
+ocr.py
+.env
+obsilite_code
+llm_deploy
+__pycache__

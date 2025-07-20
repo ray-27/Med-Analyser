@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sample Medical Documents - Download</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f8fafc;
+            color: #2d3748;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .files-container {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        
+        .files-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .file-row {
+            display: flex;
+            align-items: center;
+            padding: 20px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            background: #fafafa;
+        }
+        
+        .file-row:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.15);
+        }
+        
+        .file-icon {
+            font-size: 2.5rem;
+            margin-right: 20px;
+            flex-shrink: 0;
+        }
+        
+        .file-info {
+            flex: 1;
+            margin-right: 20px;
+        }
+        
+        .file-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 5px;
+        }
+        
+        .file-description {
+            color: #4a5568;
+            font-size: 0.95rem;
+            margin-bottom: 5px;
+            line-height: 1.4;
+        }
+        
+        .file-details {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+        
+        .file-size {
+            background: #edf2f7;
+            color: #4a5568;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+        
+        .file-type {
+            background: #e6fffa;
+            color: #2d5f5f;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+        
+        .file-actions {
+            display: flex;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-preview {
+            background: #667eea;
+            color: white;
+        }
+        
+        .btn-preview:hover {
+            background: #5a6fd8;
+            transform: translateY(-1px);
+        }
+        
+        .btn-download {
+            background: #48bb78;
+            color: white;
+        }
+        
+        .btn-download:hover {
+            background: #38a169;
+            transform: translateY(-1px);
+        }
+        
+        .btn-download:disabled {
+            background: #a0aec0;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .actions-bar {
+            background: white;
+            padding: 20px 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .actions-info {
+            color: #4a5568;
+            font-weight: 500;
+        }
+        
+        .btn-back {
+            background: #667eea;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-back:hover {
+            background: #5a6fd8;
+            transform: translateY(-2px);
+        }
+        
+        .download-notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #48bb78;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            z-index: 9999;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+        }
+        
+        .download-notification.show {
+            transform: translateX(0);
+        }
+        
+        .download-notification .close-btn {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 1.2em;
+            margin-left: 10px;
+            padding: 0;
+        }
+        
+        @media (max-width: 768px) {
+            .file-row {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .file-icon {
+                margin-right: 0;
+                margin-bottom: 10px;
+            }
+            
+            .file-info {
+                margin-right: 0;
+                width: 100%;
+            }
+            
+            .file-actions {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .actions-bar {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>
+                📥 Sample Medical Documents
+            </h1>
+            <p>Download individual medical documents for testing your analysis system</p>
+        </div>
+        
+        <div class="files-container">
+            <div class="files-list">
+                <div class="file-row">
+                    <div class="file-icon">🖼️</div>
+                    <div class="file-info">
+                        <div class="file-name">Medical Report Image 1</div>
+                        <div class="file-description">Sample medical document image containing patient information and diagnostic results</div>
+                        <div class="file-details">
+                            <span class="file-size">IMG_2379.jpeg • 2.1 MB</span>
+                            <span class="file-type">JPEG Image</span>
+                        </div>
+                    </div>
+                    <div class="file-actions">
+                        <button class="btn btn-preview" onclick="previewFile('https://dv8tzhzvv961l.cloudfront.net/build/IMG_2379.jpeg')">
+                            👁️ Preview
+                        </button>
+                        <button class="btn btn-download" onclick="downloadFile('IMG_2379.jpeg')">
+                            📥 Download
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="file-row">
+                    <div class="file-icon">🖼️</div>
+                    <div class="file-info">
+                        <div class="file-name">Medical Report Image 2</div>
+                        <div class="file-description">Additional medical document with prescription and medication details</div>
+                        <div class="file-details">
+                            <span class="file-size">IMG_2380.jpeg • 1.8 MB</span>
+                            <span class="file-type">JPEG Image</span>
+                        </div>
+                    </div>
+                    <div class="file-actions">
+                        <button class="btn btn-preview" onclick="previewFile('https://dv8tzhzvv961l.cloudfront.net/build/IMG_2380.jpeg')">
+                            👁️ Preview
+                        </button>
+                        <button class="btn btn-download" onclick="downloadFile('IMG_2380.jpeg')">
+                            📥 Download
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="file-row">
+                    <div class="file-icon">🖼️</div>
+                    <div class="file-info">
+                        <div class="file-name">Medical Report Image 3</div>
+                        <div class="file-description">Laboratory test results and analysis report documentation</div>
+                        <div class="file-details">
+                            <span class="file-size">IMG_2381.jpeg • 2.3 MB</span>
+                            <span class="file-type">JPEG Image</span>
+                        </div>
+                    </div>
+                    <div class="file-actions">
+                        <button class="btn btn-preview" onclick="previewFile('https://dv8tzhzvv961l.cloudfront.net/build/IMG_2381.jpeg')">
+                            👁️ Preview
+                        </button>
+                        <button class="btn btn-download" onclick="downloadFile('IMG_2381.jpeg')">
+                            📥 Download
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="actions-bar">
+            <div class="actions-info">
+                Individual file downloads • No bulk selection needed
+            </div>
+            <a href="/" class="btn-back">
+                ← Back to Medical Analysis App
+            </a>
+        </div>
+    </div>
+    
+    <script>
+        function previewFile(url) {
+            // Open file in new tab for preview
+            window.open(url, '_blank', 'noopener,noreferrer');
+        }
+        
+        async function downloadFile(filename) {
+            const button = event.target;
+            const originalText = button.innerHTML;
+            
+            // Disable button and show loading state
+            button.disabled = true;
+            button.innerHTML = '⏳ Downloading...';
+            
+            try {
+                // Show download notification
+                showDownloadNotification(`Downloading ${filename}...`);
+                
+                // Use server proxy to download file
+                const response = await fetch(`/proxy-download/${filename}`, {
+                    method: 'GET',
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`Download failed: ${response.status}`);
+                }
+                
+                // Convert response to blob
+                const blob = await response.blob();
+                
+                // Create download link
+                const url = window.URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = filename;
+                link.style.display = 'none';
+                
+                // Trigger download
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                // Clean up object URL
+                window.URL.revokeObjectURL(url);
+                
+                // Show success notification
+                showDownloadNotification(`✅ ${filename} downloaded successfully!`, 'success');
+                
+            } catch (error) {
+                console.error(`Failed to download ${filename}:`, error);
+                showDownloadNotification(`❌ Failed to download ${filename}. Please try again.`, 'error');
+            } finally {
+                // Reset button state
+                button.disabled = false;
+                button.innerHTML = originalText;
+            }
+        }
+        
+        function showDownloadNotification(message, type = 'info') {
+            // Remove existing notification
+            const existing = document.querySelector('.download-notification');
+            if (existing) {
+                existing.remove();
+            }
+            
+            // Create notification
+            const notification = document.createElement('div');
+            notification.className = 'download-notification';
+            
+            // Set background color based on type
+            if (type === 'success') {
+                notification.style.background = '#48bb78';
+            } else if (type === 'error') {
+                notification.style.background = '#e53e3e';
+            }
+            
+            notification.innerHTML = `
+                <div style="display: flex; align-items: center;">
+                    <span>${message}</span>
+                    <button class="close-btn" onclick="this.parentElement.parentElement.remove()">×</button>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Show notification with animation
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 100);
+            
+            // Auto-hide after 4 seconds
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.classList.remove('show');
+                    setTimeout(() => {
+                        if (notification.parentNode) {
+                            notification.remove();
+                        }
+                    }, 300);
+                }
+            }, 4000);
+        }
+    </script>
+</body>
+</html>
