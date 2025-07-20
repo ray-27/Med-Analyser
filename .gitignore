@@ -6,3 +6,4 @@ ocr.py
 obsilite_code
 llm_deploy
 __pycache__
+.DS_Store

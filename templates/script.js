@@ -268,6 +268,15 @@ class MedicalDocumentChat {
         this.fetchSessionInfo();
     }
 
+    // Hide scroll button when at bottom
+    handleScroll() {
+        const scrollBtn = document.getElementById('scroll-to-bottom');
+        if (scrollBtn) {
+            const isAtBottom = this.chatMessages.scrollTop + this.chatMessages.clientHeight >= this.chatMessages.scrollHeight - 10;
+            scrollBtn.style.display = isAtBottom ? 'none' : 'block';
+        }
+    }
+
     async fetchSessionInfo() {
         if (!this.sessionId) {
             console.warn('No session ID available');
@@ -819,7 +828,9 @@ class MedicalDocumentChat {
         `;
 
         this.chatMessages.appendChild(messageElement);
-        this.scrollToBottom();
+        setTimeout(() => {
+            this.scrollToBottom();
+        }, 100);
     }
 
     showTypingIndicator() {
@@ -894,7 +905,13 @@ class MedicalDocumentChat {
     }
 
     scrollToBottom() {
-        this.chatMessages.scrollTop = this.chatMessages.scrollHeight;
+        if (this.chatMessages) {
+            // Smooth scroll to bottom
+            this.chatMessages.scrollTo({
+                top: this.chatMessages.scrollHeight,
+                behavior: 'smooth'
+            });
+        }
     }
 
     showUploadSection() {
