@@ -7,3 +7,4 @@ obsilite_code
 llm_deploy
 __pycache__
 .DS_Store
+med_agent.log
